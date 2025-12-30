@@ -1,0 +1,474 @@
+@layer utilities {
+  @keyframes float {
+    0%, 100% { transform: translateY(0) translateX(0); }
+    50% { transform: translateY(-30px) translateX(20px); }
+  }
+
+  .animate-float { animation: float 20s ease-in-out infinite; }
+  .animate-float-delayed { animation: float 25s ease-in-out infinite 5s; }
+  .animate-float-slow { animation: float 30s ease-in-out infinite; }
+
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 1s ease-out forwards;
+  }
+
+  .animation-delay-300 { animation-delay: 0.3s; }
+  .animation-delay-600 { animation-delay: 0.6s; }
+  .animation-delay-900 { animation-delay: 0.9s; }
+  .animation-delay-1200 { animation-delay: 1.2s; }
+}
+ 
+@layer utilities {
+  /* Existing float animations (keep yours or use these enhanced ones) */
+  @keyframes float {
+    0%, 100% { transform: translateY(0) translateX(0); }
+    50% { transform: translateY(-40px) translateX(30px); }
+  }
+
+  .animate-float { animation: float 24s ease-in-out infinite; }
+  .animate-float-delayed { animation: float 28s ease-in-out infinite 6s; }
+  .animate-float-slow { animation: float 32s ease-in-out infinite; }
+  .animate-float-delayed-2 { animation: float 26s ease-in-out infinite 12s; }
+
+  /* Glow effect for blobs */
+  .glow {
+    box-shadow: 0 0 80px 40px hsl(var(--primary) / 0.3);
+  }
+
+  /* Gradient animation (slow moving) */
+  @keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient 12s ease infinite;
+  }
+
+  /* Staggered fade-in for letters */
+  @keyframes fade-in-stagger {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-stagger {
+    animation: fade-in-stagger 1s ease-out forwards;
+    transform: translateY(20px);
+  }
+
+  /* Fade in up for subtext and button */
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 1s ease-out forwards;
+  }
+
+  /* Custom delays */
+  .animation-delay-1000 { animation-delay: 1s; }
+  .animation-delay-1200 { animation-delay: 1.2s; }
+
+  /* Respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0ms !important;
+    }
+  }
+}
+ 
+@layer utilities {
+  /* Floating blob animations (already subtle and professional) */
+  @keyframes float {
+    0%, 100% { transform: translateY(0) translateX(0); }
+    50% { transform: translateY(-40px) translateX(30px); }
+  }
+
+  .animate-float { animation: float 24s ease-in-out infinite; }
+  .animate-float-delayed { animation: float 28s ease-in-out infinite 6s; }
+  .animate-float-slow { animation: float 32s ease-in-out infinite; }
+  .animate-float-delayed-2 { animation: float 26s ease-in-out infinite 12s; }
+
+  /* Wave animation for individual letters */
+  .wave-text span {
+    display: inline-block;
+    animation: wave 3s ease-in-out infinite;
+  }
+
+  @keyframes wave {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-24px); }
+  }
+
+  /* Respect user's motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-float,
+    .animate-float-delayed,
+    .animate-float-slow,
+    .animate-float-delayed-2,
+    .wave-text span {
+      animation: none !important;
+    }
+  }
+}
+ 
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+}
+ 
+@layer components {
+  .swiper-pagination {
+    bottom: 20px !important;
+  }
+
+  .custom-bullet {
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 50% !important;
+  background: var(--color-zinc-950); /* Dark circle */
+  position: relative;
+  margin: 0 12px !important;
+  box-shadow: 0 0 8px rgba(128, 90, 250, 0.6); /* subtle purple glow */
+  transition: all 0.3s ease;
+}
+
+.custom-bullet svg {
+  transform: rotate(-90deg);
+}
+
+.custom-bullet .bg-circle {
+  fill: var(--color-zinc-950);
+  stroke: var(--color-purple-500); /* thin purple border */
+  stroke-width: 3;
+}
+
+.custom-bullet .progress-ring {
+  fill: none;
+  stroke: var(--color-purple-500);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-dasharray: 138.2;
+  stroke-dashoffset: 138.2;
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.custom-bullet.swiper-pagination-bullet-active .progress-ring {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1s linear;
+}
+
+.custom-bullet .bullet-number {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--color-white); /* bright number */
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.custom-bullet:hover {
+  transform: scale(1.15);
+  box-shadow: 0 0 12px rgba(128, 90, 250, 0.8);
+}
+
+}
+
+ 
+@layer components {
+  .swiper-pagination {
+    bottom: 20px !important;
+  }
+
+  .carousel-bullet {
+    width: 56px !important;
+    height: 56px !important;
+    background: transparent !important;
+    border-radius: 50% !important;
+    opacity: 1 !important;
+    margin: 0 12px !important;
+    position: relative;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+  }
+
+  .carousel-bullet .bullet-bg {
+    fill: hsl(var(--card));
+    stroke: hsl(var(--border));
+    stroke-width: 3;
+  }
+
+  .carousel-bullet .bullet-progress {
+    fill: none;
+    stroke: hsl(var(--primary));
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-dasharray: 138.2;
+    stroke-dashoffset: 138.2;
+    transform: rotate(-90deg);
+    transform-origin: center;
+    transition: stroke-dashoffset 0.3s ease;
+  }
+
+  .carousel-bullet.swiper-pagination-bullet-active .bullet-progress {
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 6s linear; /* matches AUTOPLAY_DELAY */
+  }
+
+  .carousel-bullet .bullet-number {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    font-weight: 700;
+    color: hsl(var(--foreground));
+  }
+
+  .carousel-bullet:hover {
+    transform: scale(1.1);
+  }
+}
+ 
+{/* Beautiful Hero Section with Soft Blobs & Animation */}
+ 
+{/* Hero Section with Wave Animated Title */}
+ 
+</div>
+ 
+purple-500
+ 
+{/* Hero Section with Wave Animated Title */}
+ 
+<style jsx global>{`
+        .swiper-pagination {
+          bottom: 20px !important;
+        }
+
+        .custom-bullet {
+          width: 56px !important;
+          height: 56px !important;
+          background: transparent !important;
+          border-radius: 50% !important;
+          opacity: 1 !important;
+          margin: 0 12px !important;
+          position: relative;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          transition: all 0.3s ease;
+        }
+
+        .custom-bullet .bg-circle {
+          fill: white;
+          stroke: #e5e7eb;
+          stroke-width: 3;
+        }
+
+        .custom-bullet .progress-ring {
+          fill: none;
+          stroke: #fb923c; /* orange-400 */
+          stroke-width: 4;
+          stroke-linecap: round;
+          stroke-dasharray: 138.2;
+          stroke-dashoffset: 138.2;
+          transform: rotate(-90deg);
+          transform-origin: center;
+          transition: stroke-dashoffset 0.3s ease;
+        }
+
+        .custom-bullet.swiper-pagination-bullet-active .progress-ring {
+          stroke-dashoffset: 0;
+          transition: stroke-dashoffset ${AUTOPLAY_DELAY / 1000}s linear;
+        }
+
+        .custom-bullet .bullet-number {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-size: 20px;
+          font-weight: 700;
+          color: #1f2937;
+        }
+
+        .custom-bullet:hover {
+          transform: scale(1.1);
+        }
+      `}</style>
+ 
+Custom Pagination Styles
+ 
+{/* ================= Right Image Section ================= */}
+ 
+</div>
+ 
+mr-4
+ 
+// Full for active
+ 
+// Optional: Animate progress circle (dashoffset) based on progress
+ 
+// Loop for continuous sliding
+ 
+// Shift right, up more, deeper
+ 
+// Shift left, up, depth
+ 
+// Pagination
+ 
+// Creative effect
+ 
+// Client component for Swiper
+ 
+// Core Swiper styles
+ 
+// Display on page for debugging
+ 
+<h1>hii</h1>
+ 
+import Image from "next/image";
+ 
+y create next app
+ 
+Create Next App
+ 
+<div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
+      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
+        <Image
+          className="dark:invert"
+          src="/next.svg"
+          alt="Next.js logo"
+          width={100}
+          height={20}
+          priority
+        />
+        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
+          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
+            To get started, edit the page.tsx file.
+          </h1>
+          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
+            Looking for a starting point or more instructions? Head over to{" "}
+            <a
+              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+              className="font-medium text-zinc-950 dark:text-zinc-50"
+            >
+              Templates
+            </a>{" "}
+            or the{" "}
+            <a
+              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+              className="font-medium text-zinc-950 dark:text-zinc-50"
+            >
+              Learning
+            </a>{" "}
+            center.
+          </p>
+        </div>
+        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
+          <a
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
+            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Image
+              className="dark:invert"
+              src="/vercel.svg"
+              alt="Vercel logomark"
+              width={16}
+              height={16}
+            />
+            Deploy Now
+          </a>
+          <a
+            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
+            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Documentation
+          </a>
+        </div>
+      </main>
+    </div>
+ 
+// Fetch a single post by slug; return null if not found
+ 
+// Use title as alt fallback
+ 
+// Fallback if empty
+ 
+// Temp any; we'll cast fields
+ 
+// Map raw entries to clean BlogPost type
+ 
+// Case-sensitive; assuming your content type ID is 'blogPost'
+    order: ['-fields.publishedDate'],
+ 
+// Fetch all posts, sorted by published date (latest first)
+
+ 
+// Create the Contentful client using env vars
+ 
+/ Import types for better safety
+ 
+// Define the BlogPost interface (matches your Contentful fields exactly)
+ 
