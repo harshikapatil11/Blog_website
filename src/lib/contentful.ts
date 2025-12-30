@@ -1,11 +1,13 @@
-import { createClient, type EntryFieldTypes, type EntrySkeletonType, type Asset } from "contentful";
-import type { Document } from "@contentful/rich-text-types"; // use for rich text
+// src/lib/contentful.ts
+
+import { createClient, type EntryFieldTypes, type EntrySkeletonType } from "contentful";
+import type { Document } from "@contentful/rich-text-types";
 
 interface BlogPostFields {
   title: EntryFieldTypes.Text;
   slug: EntryFieldTypes.Text;
   excerpt?: EntryFieldTypes.Text;
-  content: EntryFieldTypes.RichText; // instead of any
+  content: EntryFieldTypes.RichText;
   coverImage?: EntryFieldTypes.AssetLink;
   publishedDate: EntryFieldTypes.Date;
 }
@@ -16,7 +18,7 @@ const spaceId = process.env.CONTENTFUL_SPACE_ID;
 const accessToken = process.env.CONTENTFUL_ACCESS_TOKEN;
 
 if (!spaceId || !accessToken) {
-  throw new Error("Missing Contentful environment variables");
+  throw new Error("Missing Contentful environment variables: CONTENTFUL_SPACE_ID or CONTENTFUL_ACCESS_TOKEN");
 }
 
 const client = createClient({
@@ -24,18 +26,17 @@ const client = createClient({
   accessToken: accessToken,
 });
 
-// Public interface
+// Public interface used in your components
 export interface BlogPost {
   title: string;
   slug: string;
   excerpt: string;
-  content: Document; // instead of any
-  coverImage?: string;
-  coverAlt?: string;
+  content: Document;
+  coverImage?: string;     // direct URL string (or undefined)
+  coverAlt?: string;       // alt text for accessibility
   publishedDate: string;
 }
 
-// Fetch all posts
 export async function getPosts(): Promise<BlogPost[]> {
   const entries = await client.withoutUnresolvableLinks.getEntries<BlogPostSkeleton>({
     content_type: "blogPost",
@@ -43,21 +44,23 @@ export async function getPosts(): Promise<BlogPost[]> {
 
   return entries.items.map((entry) => {
     const fields = entry.fields;
+
+    const coverUrl = fields.coverImage?.fields?.file?.url
+      ? `https:${fields.coverImage.fields.file.url}`
+      : undefined;
+
     return {
       title: fields.title,
       slug: fields.slug,
       excerpt: fields.excerpt ?? "",
-      content: fields.content, // now properly typed
-      coverImage: fields.coverImage?.fields?.file?.url
-        ? `https:${fields.coverImage.fields.file.url}`
-        : undefined,
+      content: fields.content,
+      coverImage: coverUrl,
       coverAlt: fields.coverImage?.fields?.title ?? fields.title,
       publishedDate: fields.publishedDate,
     };
   });
 }
 
-// Fetch post by slug
 export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   const entries = await client.withoutUnresolvableLinks.getEntries<BlogPostSkeleton>({
     content_type: "blogPost",
@@ -65,18 +68,20 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
     limit: 1,
   });
 
-  if (!entries.items.length) return null;
+  if (entries.items.length === 0) return null;
 
   const fields = entries.items[0].fields;
+
+  const coverUrl = fields.coverImage?.fields?.file?.url
+    ? `https:${fields.coverImage.fields.file.url}`
+    : undefined;
 
   return {
     title: fields.title,
     slug: fields.slug,
     excerpt: fields.excerpt ?? "",
     content: fields.content,
-    coverImage: fields.coverImage?.fields?.file?.url
-      ? `https:${fields.coverImage.fields.file.url}`
-      : undefined,
+    coverImage: coverUrl,
     coverAlt: fields.coverImage?.fields?.title ?? fields.title,
     publishedDate: fields.publishedDate,
   };
