@@ -1,12 +1,32 @@
+// src/lib/contentful.ts
+
 import { createClient } from 'contentful';
-import type { Entry, EntryCollection, Asset } from 'contentful'; 
+import type { EntryFieldTypes, EntrySkeletonType } from 'contentful';
 
+// Define your Contentful "blogPost" fields exactly as they appear in your content model
+interface BlogPostFields {
+  title: EntryFieldTypes.Text;
+  slug: EntryFieldTypes.Text;
+  excerpt?: EntryFieldTypes.Text;
+  content: any; // or EntryFieldTypes.RichText if you use rich text
+  coverImage?: EntryFieldTypes.AssetLink;
+  publishedDate: EntryFieldTypes.Date;
+}
 
+// Proper typed skeleton
+type BlogPostSkeleton = EntrySkeletonType<BlogPostFields, 'blogPost'>;
+
+const client = createClient({
+  space: process.env.CONTENTFUL_SPACE_ID!,
+  accessToken: process.env.CONTENTFUL_ACCESS_TOKEN!,
+});
+
+// Your public interface for blog posts
 export interface BlogPost {
   title: string;
   slug: string;
   excerpt: string;
-  content: any; 
+  content: any;
   coverImage?: {
     url: string;
     alt: string;
@@ -14,61 +34,63 @@ export interface BlogPost {
   publishedDate: string;
 }
 
-
-const client = createClient({
-  space: process.env.CONTENTFUL_SPACE_ID!,
-  accessToken: process.env.CONTENTFUL_ACCESS_TOKEN!,
-});
-
 export async function getPosts(): Promise<BlogPost[]> {
-  const entries = await client.getEntries({
-    content_type: 'blogPost', 
-  }) as EntryCollection<unknown>;
+  // Filters out any entries with broken links (e.g. deleted images)
+  const entries = await client.withoutUnresolvableLinks.getEntries<BlogPostSkeleton>({
+    content_type: 'blogPost',
+  });
 
-  
-  return entries.items.map((item: Entry<unknown>) => {
-    const fields = item.fields as any; 
-    const coverImageAsset = fields.coverImage as Asset | undefined;
+  return entries.items.map((entry) => {
+    const fields = entry.fields;
 
     return {
-      title: fields.title as string,
-      slug: fields.slug as string,
-      excerpt: fields.excerpt as string || '', 
+      title: fields.title,
+      slug: fields.slug,
+      excerpt: fields.excerpt ?? '',
       content: fields.content,
-      coverImage: coverImageAsset ? {
-        url: `https:${coverImageAsset.fields.file.url}`,
-        alt: coverImageAsset.fields.title || fields.title, 
-      } : undefined,
-      publishedDate: fields.publishedDate as string,
+      // Safe check: only create coverImage if the asset has a file
+      coverImage:
+        fields.coverImage &&
+        fields.coverImage.fields.file &&
+        fields.coverImage.fields.file.url
+          ? {
+              url: `https:${fields.coverImage.fields.file.url}`,
+              alt: fields.coverImage.fields.title ?? fields.title,
+            }
+          : undefined,
+      publishedDate: fields.publishedDate,
     };
   });
 }
 
-
 export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
-  const entries = await client.getEntries({
+  const entries = await client.withoutUnresolvableLinks.getEntries<BlogPostSkeleton>({
     content_type: 'blogPost',
     'fields.slug': slug,
     limit: 1,
-  }) as EntryCollection<unknown>;
+  });
 
   if (entries.items.length === 0) {
     return null;
   }
 
-  const item = entries.items[0];
-  const fields = item.fields as any;
-  const coverImageAsset = fields.coverImage as Asset | undefined;
+  const entry = entries.items[0];
+  const fields = entry.fields;
 
   return {
-    title: fields.title as string,
-    slug: fields.slug as string,
-    excerpt: fields.excerpt as string || '',
+    title: fields.title,
+    slug: fields.slug,
+    excerpt: fields.excerpt ?? '',
     content: fields.content,
-    coverImage: coverImageAsset ? {
-      url: `https:${coverImageAsset.fields.file.url}`,
-      alt: coverImageAsset.fields.title || fields.title,
-    } : undefined,
-    publishedDate: fields.publishedDate as string,
+    coverImage:
+      fields.coverImage &&
+      fields.coverImage.fields.file &&
+      fields.coverImage.fields.file.url
+        ? {
+            url: `https:${fields.coverImage.fields.file.url}`,
+            alt: fields.coverImage.fields.title ?? fields.title,
+          }
+        : undefined,
+    publishedDate: fields.publishedDate,
   };
 }

@@ -29,9 +29,83 @@ To learn more about Next.js, take a look at the following resources:
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 # Blog_website
+
+# Next.js + Contentful Mini Production App
+
+## Overview
+This is a **Contentful-driven mini marketing site** built using **Next.js (App Router)**, **TypeScript**, **Tailwind CSS**, and **shadcn/ui**.  
+The project demonstrates fetching content from Contentful, rendering blogs, and handling a contact form with **EmailJS**.
+
+---
+
+## Live Demo
+[Deployed on Vercel](YOUR_VERCEL_URL)
+
+---
+
+## Features
+
+### Home Page (`/`)
+- Hero section with heading, subheading, and CTA button.
+- Hero carousel showcasing blogs.
+- Latest 3 blog posts with title and excerpt.
+
+### Blog List (`/blog`)
+- Lists all blog posts from Contentful.
+- Displays title, excerpt, and published date.
+- Responsive layout with loading and empty states.
+
+### Blog Detail (`/blog/[slug]`)
+- Renders blog content fetched by slug.
+- Shows title, date, cover image, and rich text content.
+- 404 page if slug not found.
+- SEO metadata (title + description).
+
+### Contact Us (`/contact`)
+- EmailJS integration to send messages directly.
+- Form with Name, Email, Phone, and Message fields.
+- Success and error notifications.
+
+### About Us
+- Simple section with company/project description.
+
+---
+
+## Tech Stack
+- **Next.js (App Router)** – React framework for frontend & routing.
+- **TypeScript** – Ensures type safety.
+- **Contentful** – Headless CMS (Delivery API only).
+- **Tailwind CSS** – Utility-first styling.
+- **shadcn/ui** – UI components (Card, Button, Badge, etc.).
+- **EmailJS** – Client-side email form integration.
+- **next/image** – Optimized images.
+- **GitHub & Vercel** – Source control and deployment.
+
+---
+
+## Contentful Model
+**Content Type:** BlogPost  
+Required fields:
+- `title` (short text, required)
+- `slug` (short text, required, unique)
+- `excerpt` (long text)
+- `content` (rich text)
+- `coverImage` (media)
+- `publishedDate` (date)
+
+**Seed:** Minimum 3 blog posts.
+
+> Include a screenshot of your Contentful model here.
+
+---
+
+## Setup
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/YOUR_USERNAME/YOUR_REPO.git
+cd YOUR_REPO
+

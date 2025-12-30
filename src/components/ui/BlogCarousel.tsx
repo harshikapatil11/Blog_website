@@ -102,13 +102,13 @@ export default function BlogCarousel({ posts }: BlogCarouselProps) {
               {/* Image */}
               <div className="relative h-full overflow-hidden rounded-l-[60px]">
                 <Image
-                  src={post.coverImage.url}
-                  alt={post.title}
-                  fill
-                  className="object-cover"
-                  priority={index === 0}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
-                />
+                    src={post.coverImage?.url ?? "/what-is-motivation.jpg"}
+                    alt={post.coverImage?.alt ?? post.title}
+                    fill
+                    className="object-cover"
+                    priority={index === 0}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 40vw"
+                    />
                 <div className="absolute inset-0 bg-gradient-to-l from-yellow-400/40 via-yellow-300/20 to-transparent pointer-events-none" />
               </div>
             </div>
