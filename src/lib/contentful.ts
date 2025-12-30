@@ -1,7 +1,6 @@
 // src/lib/contentful.ts
-
-import { createClient } from 'contentful';
-import type { EntryFieldTypes, EntrySkeletonType } from 'contentful';
+import { createClient } from "contentful";
+import type { EntryFieldTypes, EntrySkeletonType } from "contentful";
 
 // Define your Contentful "blogPost" fields exactly as they appear in your content model
 interface BlogPostFields {
@@ -14,83 +13,75 @@ interface BlogPostFields {
 }
 
 // Proper typed skeleton
-type BlogPostSkeleton = EntrySkeletonType<BlogPostFields, 'blogPost'>;
+type BlogPostSkeleton = EntrySkeletonType<BlogPostFields, "blogPost">;
+
+// Ensure env vars exist
+const spaceId = process.env.CONTENTFUL_SPACE_ID;
+const accessToken = process.env.CONTENTFUL_ACCESS_TOKEN;
+
+if (!spaceId || !accessToken) {
+  throw new Error("Missing Contentful environment variables");
+}
 
 const client = createClient({
-  space: process.env.CONTENTFUL_SPACE_ID!,
-  accessToken: process.env.CONTENTFUL_ACCESS_TOKEN!,
+  space: spaceId,
+  accessToken: accessToken,
 });
 
-// Your public interface for blog posts
+// Public interface for blog posts
 export interface BlogPost {
   title: string;
   slug: string;
   excerpt: string;
   content: any;
-  coverImage?: {
-    url: string;
-    alt: string;
-  };
+  coverImage?: string;   // URL only
+  coverAlt?: string;     // optional alt text
   publishedDate: string;
 }
 
+// Fetch all posts
 export async function getPosts(): Promise<BlogPost[]> {
-  // Filters out any entries with broken links (e.g. deleted images)
   const entries = await client.withoutUnresolvableLinks.getEntries<BlogPostSkeleton>({
-    content_type: 'blogPost',
+    content_type: "blogPost",
   });
 
   return entries.items.map((entry) => {
     const fields = entry.fields;
-
     return {
       title: fields.title,
       slug: fields.slug,
-      excerpt: fields.excerpt ?? '',
+      excerpt: fields.excerpt ?? "",
       content: fields.content,
-      // Safe check: only create coverImage if the asset has a file
-      coverImage:
-        fields.coverImage &&
-        fields.coverImage.fields.file &&
-        fields.coverImage.fields.file.url
-          ? {
-              url: `https:${fields.coverImage.fields.file.url}`,
-              alt: fields.coverImage.fields.title ?? fields.title,
-            }
-          : undefined,
+      coverImage: fields.coverImage?.fields?.file?.url
+        ? `https:${fields.coverImage.fields.file.url}`
+        : undefined,
+      coverAlt: fields.coverImage?.fields?.title ?? fields.title,
       publishedDate: fields.publishedDate,
     };
   });
 }
 
+// Fetch single post by slug
 export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   const entries = await client.withoutUnresolvableLinks.getEntries<BlogPostSkeleton>({
-    content_type: 'blogPost',
-    'fields.slug': slug,
+    content_type: "blogPost",
+    "fields.slug": slug,
     limit: 1,
   });
 
-  if (entries.items.length === 0) {
-    return null;
-  }
+  if (!entries.items.length) return null;
 
-  const entry = entries.items[0];
-  const fields = entry.fields;
+  const fields = entries.items[0].fields;
 
   return {
     title: fields.title,
     slug: fields.slug,
-    excerpt: fields.excerpt ?? '',
+    excerpt: fields.excerpt ?? "",
     content: fields.content,
-    coverImage:
-      fields.coverImage &&
-      fields.coverImage.fields.file &&
-      fields.coverImage.fields.file.url
-        ? {
-            url: `https:${fields.coverImage.fields.file.url}`,
-            alt: fields.coverImage.fields.title ?? fields.title,
-          }
-        : undefined,
+    coverImage: fields.coverImage?.fields?.file?.url
+      ? `https:${fields.coverImage.fields.file.url}`
+      : undefined,
+    coverAlt: fields.coverImage?.fields?.title ?? fields.title,
     publishedDate: fields.publishedDate,
   };
 }

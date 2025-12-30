@@ -47,17 +47,18 @@ export default async function BlogDetail({
       {/* HERO */}
       {post.coverImage && (
         <div className="relative h-[420px] w-full overflow-hidden">
-          <Image
-            src={post.coverImage.url}
-            alt={post.title}
+            <Image
+            src={post.coverImage}  // <-- use the string directly
+            alt={post.coverAlt ?? post.title} // optional alt
             fill
             sizes="100vw"
             priority
             className="object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
         </div>
-      )}
+        )}
+
 
       {/* CONTENT */}
       <article className="relative -mt-32 max-w-3xl mx-auto px-6">
