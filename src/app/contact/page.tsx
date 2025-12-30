@@ -12,39 +12,32 @@ export default function ContactPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
   e.preventDefault();
-
   if (!formRef.current) return;
 
-  // add time manually
+  const formData = new FormData(formRef.current);
+  const name = formData.get("name") as string;
+  const email = formData.get("email") as string;
+  const phone = formData.get("phone") as string;
+  const message = formData.get("message") as string;
   const time = new Date().toLocaleString();
 
   setSending(true);
   emailjs.send(
-  "service_kk3ascu",
-  "template_45pvtvs",
-  {
-    name: formRef.current.name.value,
-    email: formRef.current.email.value,
-    phone: formRef.current.phone.value,
-    message: formRef.current.message.value,
-    time: new Date().toLocaleString()
-  },
-  "CkEYcszgeikBVkrdj"
-)
-
+    "service_kk3ascu",
+    "template_45pvtvs",
+    { name, email, phone, message, time },
+    "CkEYcszgeikBVkrdj"
+  )
   .then(
-    (result) => {
-      console.log(result.text);
+    () => {
       setSuccess("Message sent successfully!");
       formRef.current?.reset();
     },
-    (error) => {
-      console.error(error.text);
-      setSuccess("Failed to send message. Try again.");
-    }
+    () => setSuccess("Failed to send message. Try again.")
   )
   .finally(() => setSending(false));
-}
+};
+
 
   return (
     <main className="relative min-h-screen bg-[#FDB515] overflow-hidden flex items-center justify-center">

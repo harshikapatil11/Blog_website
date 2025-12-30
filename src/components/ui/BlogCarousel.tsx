@@ -31,7 +31,7 @@ export default function BlogCarousel({ posts }: BlogCarouselProps) {
 
   return (
     <section className="relative overflow-hidden py-24 bg-yellow-400">
-  {/* Floating blobs (matching hero circle) */}
+  
   <div className="pointer-events-none absolute inset-0 -z-10">
     <div className="absolute -left-40 -top-40 h-[700px] w-[700px] rounded-full bg-yellow-500/80 blur-[120px]" />
     <div className="absolute right-0 top-40 h-[500px] w-[600px] rounded-full bg-yellow-400/50 blur-3xl" />

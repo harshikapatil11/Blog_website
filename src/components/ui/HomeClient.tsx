@@ -16,7 +16,7 @@ export default function HomeClient({ posts }: Props) {
 
     <Header />
     <section id="about">
-      {/* ================= HERO ================= */}
+      {/*  HERO */}
       <section className="relative min-h-screen bg-[#FDB515] flex items-center justify-center overflow-hidden">
 
         {/* Floating blobs */}
